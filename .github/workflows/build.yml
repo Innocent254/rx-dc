@@ -79,7 +79,7 @@ jobs:
         run: npm run dist -- --${{ matrix.target }} --${{ matrix.arch }}
 
       - name: Upload installers
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: rx-dc-${{ matrix.target }}-${{ matrix.arch }}
           path: |
