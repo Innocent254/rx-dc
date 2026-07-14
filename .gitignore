@@ -1,0 +1,36 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Build outputs
+dist/
+release/
+build/backend/
+backend/rxdc-backend
+backend/rxdc-backend.exe
+
+# Environment and local settings
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs
+*.log
+logs/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test and coverage
+coverage/
+
+# Certificates and signing material
+*.p12
+*.pfx
+*.cer
+*.key
+*.mobileprovision
