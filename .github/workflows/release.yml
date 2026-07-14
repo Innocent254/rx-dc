@@ -182,7 +182,7 @@ jobs:
 
     steps:
       - name: Download all successful build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: release-*
           path: release-assets
