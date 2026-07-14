@@ -1,0 +1,10 @@
+{
+  "name": "R|X DC — Xiaomi & Redmi Desktop Companion",
+  "short_name": "R|X DC",
+  "description": "An unofficial local-first desktop companion for Xiaomi, Redmi and POCO Android devices.",
+  "start_url": "/rx-dc/",
+  "display": "standalone",
+  "background_color": "#09101b",
+  "theme_color": "#101522",
+  "icons": [{"src":"assets/rx-dc-icon.png","sizes":"1536x1536","type":"image/jpeg","purpose":"any maskable"}]
+}

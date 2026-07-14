@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://innocent254.github.io/rx-dc/sitemap.xml

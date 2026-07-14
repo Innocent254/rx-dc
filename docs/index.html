@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>R|X DC — Xiaomi & Redmi Desktop Companion</title>
+  <meta name="description" content="Download R|X DC, an unofficial local-first desktop companion for Xiaomi, Redmi and POCO Android devices. USB and wireless ADB, file transfer, app launching and desktop control." />
+  <meta name="keywords" content="Xiaomi desktop mode, Redmi desktop mode, Xiaomi DeX alternative, Redmi DeX alternative, Android desktop companion, HyperOS desktop mode, MIUI desktop mode, POCO desktop mode, ADB desktop app, scrcpy frontend" />
+  <meta name="author" content="Innocent Cheng'ole Were" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#101522" />
+  <link rel="canonical" href="https://innocent254.github.io/rx-dc/" />
+  <link rel="icon" href="assets/rx-dc-icon.png" />
+  <link rel="apple-touch-icon" href="assets/rx-dc-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="R|X DC — Xiaomi & Redmi Desktop Companion" />
+  <meta property="og:description" content="A local-first desktop companion for Xiaomi, Redmi and POCO Android devices." />
+  <meta property="og:url" content="https://innocent254.github.io/rx-dc/" />
+  <meta property="og:image" content="https://innocent254.github.io/rx-dc/assets/rx-dc-icon.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="R|X DC — Xiaomi & Redmi Desktop Companion" />
+  <meta name="twitter:description" content="Download the latest R|X DC release for Windows, Linux and macOS." />
+  <meta name="twitter:image" content="https://innocent254.github.io/rx-dc/assets/rx-dc-icon.png" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "R|X DC",
+    "alternateName": "Redmi and Xiaomi Desktop Computer",
+    "description": "An unofficial local-first desktop companion for Xiaomi, Redmi and POCO Android devices with USB and wireless ADB support, app launching, file transfer and desktop control.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Windows, Linux, macOS",
+    "softwareRequirements": "Android Platform Tools (ADB); optional scrcpy",
+    "isAccessibleForFree": true,
+    "license": "https://www.apache.org/licenses/LICENSE-2.0",
+    "url": "https://innocent254.github.io/rx-dc/",
+    "downloadUrl": "https://github.com/Innocent254/rx-dc/releases/latest",
+    "codeRepository": "https://github.com/Innocent254/rx-dc",
+    "author": {
+      "@type": "Person",
+      "name": "Innocent Cheng'ole Were"
+    }
+  }
+  </script>
+</head>
+<body>
+  <canvas id="network" aria-hidden="true"></canvas>
+  <div class="aurora aurora-a"></div>
+  <div class="aurora aurora-b"></div>
+
+  <header class="nav shell">
+    <a class="brand" href="#top" aria-label="R X DC home">
+      <img src="assets/rx-dc-icon.png" alt="R X DC application icon" />
+      <span><b>R|X DC</b><small>Xiaomi & Redmi Desktop Companion</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#features">Features</a>
+      <a href="#download">Download</a>
+      <a href="#about">About</a>
+      <a class="nav-repo" href="https://github.com/Innocent254/rx-dc" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero shell">
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span> Open source · Local first · Unofficial</div>
+        <h1>Your Xiaomi or Redmi,<br /><em>closer to a desktop.</em></h1>
+        <p class="lead">R|X DC is a desktop companion for authorized Xiaomi, Redmi and POCO Android devices, bringing device control, app launching, file transfer and wireless debugging into one polished interface.</p>
+        <div class="hero-actions" id="download">
+          <a id="downloadButton" class="button button-primary" href="https://github.com/Innocent254/rx-dc/releases/latest">Download latest</a>
+          <a class="button button-secondary" href="https://github.com/Innocent254/rx-dc" target="_blank" rel="noopener">View repository</a>
+        </div>
+        <div class="release-line" aria-live="polite">
+          <strong id="releaseVersion">Checking latest release…</strong>
+          <span id="releaseTime"></span>
+        </div>
+      </div>
+
+      <div class="hero-card" aria-label="Application preview">
+        <div class="window-bar"><i></i><i></i><i></i><span>R|X DC</span></div>
+        <div class="preview-grid">
+          <aside>
+            <img src="assets/rx-dc-icon.png" alt="" />
+            <b>Dashboard</b><span>Devices</span><span>Desktop mode</span><span>Files</span><span>Apps</span>
+          </aside>
+          <div class="preview-main">
+            <div class="status-card">
+              <span class="online-dot"></span>
+              <div><small>DEVICE STATUS</small><strong>Connected locally</strong></div>
+              <b>87%</b>
+            </div>
+            <div class="screen-card">
+              <div class="screen-glow"></div>
+              <span>DESKTOP SESSION</span>
+              <strong>Ready when you are.</strong>
+            </div>
+            <div class="mini-row"><span>USB & wireless</span><span>File transfer</span><span>App control</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section shell">
+      <div class="section-heading"><span>Designed for practical Android workflows</span><h2>One companion. No cloud required.</h2></div>
+      <div class="features">
+        <article><div>01</div><h3>Local by design</h3><p>The desktop client and Go service communicate on your computer. Phone operations do not depend on a hosted cloud backend.</p></article>
+        <article><div>02</div><h3>USB and wireless</h3><p>Discover authorized Android devices through USB debugging or pair using Android Wireless debugging on a trusted network.</p></article>
+        <article><div>03</div><h3>Device productivity</h3><p>Launch applications, transfer files, send text and use supported input controls from a focused desktop interface.</p></article>
+      </div>
+    </section>
+
+    <section class="release-panel shell">
+      <div>
+        <span class="eyebrow"><span></span> Latest build</span>
+        <h2 id="releasePanelVersion">R|X DC</h2>
+        <p id="releaseDescription">Installer packages are available for Windows, Linux and macOS.</p>
+      </div>
+      <div class="platforms"><span>Windows</span><span>Linux</span><span>macOS</span></div>
+      <a id="allDownloadsButton" class="button button-primary" href="https://github.com/Innocent254/rx-dc/releases/latest">All downloads</a>
+    </section>
+
+    <section id="about" class="section shell about">
+      <div><span class="eyebrow"><span></span> Project status</span><h2>Independent and transparent.</h2></div>
+      <p>R|X DC is an independent community project and is not affiliated with or endorsed by Xiaomi, Redmi, POCO, Samsung, Google or the scrcpy project. The current release is a desktop-companion MVP using permitted Android debugging tools; it is not yet an OEM-integrated Samsung DeX equivalent.</p>
+    </section>
+  </main>
+
+  <footer class="shell">
+    <div class="brand compact"><img src="assets/rx-dc-icon.png" alt="" /><span><b>R|X DC</b><small>Open-source desktop companion</small></span></div>
+    <p>Apache-2.0 licensed · Built by Innocent Cheng'ole Were</p>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
