@@ -1,15 +1,103 @@
 name: Publish release
+run-name: Release ${{ inputs.tag }} by @${{ github.actor }}
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Version tag, for example v1.0.0"
+        required: true
+        default: "v1.0.0"
+        type: string
+      title:
+        description: "Release title; leave blank to use R|X DC <tag>"
+        required: false
+        default: ""
+        type: string
+      notes:
+        description: "Release notes; leave blank to generate them automatically"
+        required: false
+        default: ""
+        type: string
+      prerelease:
+        description: "Mark this release as a pre-release"
+        required: true
+        default: true
+        type: boolean
+      draft:
+        description: "Create a draft instead of publishing immediately"
+        required: true
+        default: false
+        type: boolean
+      latest:
+        description: "Mark this release as Latest"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
 
+concurrency:
+  group: release-${{ inputs.tag }}
+  cancel-in-progress: false
+
 jobs:
+  validate:
+    name: Validate source and release details
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.16.0"
+          cache: npm
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.x"
+          cache: false
+
+      - name: Validate release tag
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid tag: $RELEASE_TAG"
+            echo "Use a semantic version such as v1.0.0 or v1.1.0-beta.1."
+            exit 1
+          fi
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "A Git tag named $RELEASE_TAG already exists."
+            echo "Choose a new version tag or delete the existing tag before retrying."
+            exit 1
+          fi
+
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "A GitHub release named $RELEASE_TAG already exists."
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build source
+        run: npm run build
+
   build:
+    name: Build ${{ matrix.target }} ${{ matrix.arch }}
+    needs: validate
     strategy:
       fail-fast: false
       matrix:
@@ -49,41 +137,109 @@ jobs:
     env:
       GOOS: ${{ matrix.goos }}
       GOARCH: ${{ matrix.goarch }}
-      CGO_ENABLED: '0'
-      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      CGO_ENABLED: "0"
+      CSC_IDENTITY_AUTO_DISCOVERY: "false"
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '22.16.0'
+          node-version: "22.16.0"
           cache: npm
-      - uses: actions/setup-go@v5
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          go-version: '1.23.x'
+          go-version: "1.23.x"
           cache: false
-      - run: npm ci
-      - name: Build installers
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build installer
         run: npm run dist -- --${{ matrix.target }} --${{ matrix.arch }}
-      - uses: actions/upload-artifact@v4
+
+      - name: Upload installer artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: release-${{ matrix.target }}-${{ matrix.arch }}
           path: |
             release/*
             !release/*-unpacked/**
             !release/mac*/**
+            !release/builder-debug.yml
+            !release/builder-effective-config.yaml
           if-no-files-found: error
+          retention-days: 14
 
   publish:
+    name: Create GitHub release
     needs: build
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download all successful build artifacts
+        uses: actions/download-artifact@v4
         with:
           pattern: release-*
           path: release-assets
           merge-multiple: true
-      - name: Create GitHub release
+
+      - name: Verify release assets
+        shell: bash
+        run: |
+          echo "Release assets:"
+          find release-assets -maxdepth 1 -type f -printf '%f\n' | sort
+
+          if ! find release-assets -maxdepth 1 -type f -print -quit | grep -q .; then
+            echo "No release assets were downloaded."
+            exit 1
+          fi
+
+      - name: Create release and upload installers
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${GITHUB_REF_NAME}" release-assets/* --generate-notes --title "R|X DC ${GITHUB_REF_NAME}"
+          RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_TITLE: ${{ inputs.title }}
+          RELEASE_NOTES: ${{ inputs.notes }}
+          RELEASE_PRERELEASE: ${{ inputs.prerelease }}
+          RELEASE_DRAFT: ${{ inputs.draft }}
+          RELEASE_LATEST: ${{ inputs.latest }}
+        run: |
+          if [[ -z "$RELEASE_TITLE" ]]; then
+            RELEASE_TITLE="R|X DC $RELEASE_TAG"
+          fi
+
+          args=(
+            release create "$RELEASE_TAG"
+            release-assets/*
+            --target "$GITHUB_SHA"
+            --title "$RELEASE_TITLE"
+          )
+
+          if [[ -n "$RELEASE_NOTES" ]]; then
+            printf '%s\n' "$RELEASE_NOTES" > release-notes.md
+            args+=(--notes-file release-notes.md)
+          else
+            args+=(--generate-notes)
+          fi
+
+          if [[ "$RELEASE_PRERELEASE" == "true" ]]; then
+            args+=(--prerelease)
+          fi
+
+          if [[ "$RELEASE_DRAFT" == "true" ]]; then
+            args+=(--draft)
+          fi
+
+          if [[ "$RELEASE_LATEST" == "true" ]]; then
+            args+=(--latest)
+          else
+            args+=(--latest=false)
+          fi
+
+          gh "${args[@]}"
