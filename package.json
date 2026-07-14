@@ -1,0 +1,96 @@
+{
+  "name": "rx-dc",
+  "version": "1.0.0",
+  "description": "Unofficial local-first Xiaomi and Redmi desktop companion",
+  "author": "Innocent Cheng'ole Were",
+  "license": "Apache-2.0",
+  "private": true,
+  "main": "electron/main.cjs",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "concurrently -k -s first \"npm:dev:renderer\" \"npm:dev:electron\"",
+    "dev:renderer": "vite --host 127.0.0.1 --port 5173",
+    "dev:electron": "wait-on tcp:127.0.0.1:5173 && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .",
+    "backend:build": "node scripts/build-backend.mjs",
+    "build:web": "tsc --noEmit && vite build",
+    "build": "npm run backend:build && npm run build:web",
+    "dist": "npm run build && electron-builder --publish never",
+    "dist:dir": "npm run build && electron-builder --dir",
+    "test:backend": "cd backend && go test ./...",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run test:backend && npm run typecheck"
+  },
+  "dependencies": {
+    "lucide-react": "1.24.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "6.0.3",
+    "concurrently": "10.0.3",
+    "cross-env": "10.1.0",
+    "electron": "43.1.0",
+    "electron-builder": "26.15.3",
+    "typescript": "7.0.2",
+    "vite": "8.1.4",
+    "wait-on": "9.0.10"
+  },
+  "build": {
+    "appId": "io.github.innocentwere.rxdc",
+    "productName": "RX DC",
+    "artifactName": "RX-DC-${version}-${os}-${arch}.${ext}",
+    "asar": true,
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "build/backend",
+        "to": "backend"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "RX DC"
+    },
+    "mac": {
+      "icon": "build/icon.icns",
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "linux": {
+      "icon": "build/icon.png",
+      "category": "Utility",
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "publish": null
+  }
+}
