@@ -2,7 +2,10 @@
   "name": "rx-dc",
   "version": "1.0.0",
   "description": "Unofficial local-first Xiaomi and Redmi desktop companion",
-  "author": "Innocent Cheng'ole Were",
+  "author": {
+    "name": "Innocent Cheng'ole Were",
+    "email": "Chengoleinnocent@gmail.com"
+  },
   "license": "Apache-2.0",
   "private": true,
   "main": "electron/main.cjs",
@@ -64,8 +67,7 @@
     "win": {
       "icon": "build/icon.ico",
       "target": [
-        "nsis",
-        "portable"
+        "nsis"
       ]
     },
     "nsis": {
